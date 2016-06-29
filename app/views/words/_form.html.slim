@@ -1,0 +1,6 @@
+= simple_form_for @word, :html => { :class => "form-horizontal" } do |f|
+  = f.input :name
+  = f.input :desc
+  = f.button :submit, :class => 'btn-primary'
+  '
+  = link_to t('.cancel', :default => t("helpers.links.cancel")), words_path, :class => 'btn btn-default'

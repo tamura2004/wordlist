@@ -1,0 +1,11 @@
+.container
+  .col-xs-3.well
+    = form_for :session, url: session_path do |form|
+      .form-group
+        = form.label :email
+        = form.email_field :email, class: "form-control"
+      .form-group
+        = form.label :password
+        = form.password_field :password, class: "form-control"
+      .form-group
+        = form.submit "ログイン", class: "btn btn-primary"
