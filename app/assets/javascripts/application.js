@@ -18,5 +18,6 @@
 //= require vue-resource
 //= require vue-animated-list/vue-animated-list
 //= require lodash/lodash
+//= require md5
 //= require_tree .
 
