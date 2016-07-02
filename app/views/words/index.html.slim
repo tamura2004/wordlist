@@ -1,16 +1,47 @@
-#app
-  .card
-    textarea.card-title#new_word{
-      @keyup.enter="insert"
+.navbar.navbar-default.navbar-static-top
+  .container
+    button.navbar-toggle type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse"
+      span.icon-bar
+      span.icon-bar
+      span.icon-bar
+    a.navbar-brand href="/" ワードリスト
+    .navbar-collapse.collapse.navbar-responsive-collapse
+      ul.nav.navbar-nav
+        p.navbar-text @click="shuffle" shuffle
+        li= link_to "Link 2", "/path2"
+        li= link_to "Link 3", "/path3"
+      form.navbar-form.navbar-right role="search"
+        .form-group
+          input.form-control type="text" placeholder="検索"
+
+
+
+.container
+  = bootstrap_flash
+  .item#new
+    textarea.item-title{
+      placeholder="ワードを入力"
+      @keydown.enter.prevent="onEnter"
       v-model="name"
     }
 
-    textarea.card-body{
-      @keyup.enter="insert"
+    textarea.item-body{
+      placeholder="説明"
+      @keydown.enter.prevent="onEnter"
       v-model="desc"
     }
 
-  .card v-for="word in words" v-if="!word.removed"
+  .item v-for="word in words" transition="item" track-by="id" v-show="!word.removed"
     i class="fa fa-2x fa-times delete-button" @click="remove(word)"
-    textarea.card-title v-model="word.name"
+    textarea.item-title v-model="word.name"
     textarea.card-body v-model="word.desc"
+
+  footer
+    p &copy; Company 2016
+
+
+
+  / .card v-for="word in words" track-by="id" v-if="!word.removed" transition="card"
+  /   i class="fa fa-2x fa-times delete-button" @click="remove(word)"
+  /   textarea.card-title v-model="word.name"
+  /   textarea.card-body v-model="word.desc"

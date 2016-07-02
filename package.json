@@ -1,0 +1,9 @@
+{
+  "name": "vuejsrails",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "lodash": "^4.13.1",
+    "vue-animated-list": "^1.0.2"
+  }
+}

@@ -16,4 +16,7 @@
 //= require vue
 //= require vue-router
 //= require vue-resource
+//= require vue-animated-list/vue-animated-list
+//= require lodash/lodash
 //= require_tree .
+

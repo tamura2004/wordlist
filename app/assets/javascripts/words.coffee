@@ -11,16 +11,37 @@ $ ->
       words: []
 
     created: ->
-      @$http.get "http://localhost:3000/words.json", (data,status,request) ->
-        @words.push word for word in data
-        document.getElementById("new_word").focus()
+      @$http.get "words.json", (data,status,request) ->
+        @words.unshift word for word in data
+        # document.getElementById("new").firstElementChild.focus()
 
     methods:
+      shuffle: ->
+        @words = _.shuffle @words
+
+      add: ->
+        @words.unshift name: "hoge", desc: "fuga"
+
       remove: (word) ->
-        word.removed = true
+        @words = _.filter @words, (w) ->
+          w.id isnt word.id
+
+      onEnter: (e) ->
+        t = e.target
+        switch t.className
+          when "item-title"
+            t.nextElementSibling.focus() if t.value isnt ""
+
+          when "item-body"
+            @insert()
+            t.previousElementSibling.focus()
+
+      changeBody: (e) ->
+        console.log e.target.value
+
 
       insert: ->
-        document.getElementById("new_word").focus() # 何故かこれをしないとdescがクリアされない
+        document.getElementById("new").firstElementChild.focus()
         word =
           name: @name.replace(/\n/g,"")
           desc: @desc.replace(/\n/g,"")
@@ -28,5 +49,5 @@ $ ->
         @name = ""
         @desc = ""
 
-        @$http.post "http://localhost:3000/words.json", word, (data,status,request) ->
+        @$http.post "words.json", word, (data,status,request) ->
           @words.unshift data
