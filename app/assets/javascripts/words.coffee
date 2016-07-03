@@ -1,5 +1,6 @@
 $ ->
   csrftoken = document.querySelector("meta[name=csrf-token]").content
+  csrfheader = headers: "X-CSRF-Token": csrftoken
 
   new Vue
     el: "#app"
@@ -7,8 +8,13 @@ $ ->
       sortkey: "created_at"
       sortorder: "-1"
       query: ""
+      checkSelf: false
       status:
         login: false
+      menu:
+        rank: false
+        word: true
+        quiz: false
       user: ""
       name: ""
       desc: ""
@@ -25,34 +31,43 @@ $ ->
           if response.data.name?
             @user = response.data.name
             @status.login = true
+            @checkSelf = true
         (response) -> console.log response
       )
 
       document.getElementById("new").firstElementChild.focus()
 
+    computed:
+      totalRank: -> _.countBy @words, "user"
+      monthlyRank: -> _.countBy @words, "user"
+      weeklyRank: -> _.countBy @words, "user"
+
     methods:
+      setMenu: (name)->
+        for page in ["rank","word","quiz"]
+          @menu[page] = (name is page)
+
+      filterSelf: (v)->
+        not @checkSelf or v.user is @user
+
       logoff: ->
         @user = ""
         @status.login = false
+        @checkSelf = false
 
       login: (e) ->
         name = e.target.value
         if @isZen(name) and name isnt ""
-          user = name: name
-          opt = headers: "X-CSRF-Token": csrftoken
-
-          @$http.post("session.json", user, opt).then(
+          @$http.post("session.json", {name: name}, csrfheader).then(
             (response) ->
               @user = response.data.name
               @status.login = true
+              @checkSelf = true
 
             (response) -> console.log response
           )
         else
           alert "名前は全角で入力して下さい"
-
-      shuffle: ->
-        @words = _.shuffle @words
 
       add: ->
         @words.unshift name: "hoge", desc: "fuga"
@@ -80,12 +95,15 @@ $ ->
         word =
           name: @name.replace(/\n/g,"")
           desc: @desc.replace(/\n/g,"")
+          user: @user
 
         @name = ""
         @desc = ""
 
-        @$http.post("words.json", word).then (response) ->
-          @words.unshift response.data
+        @$http.post("words.json", word, csrfheader).then(
+          (response) -> @words.unshift response.data
+          (response) -> console.log response
+        )
 
       isZen: (str) ->
         check = true

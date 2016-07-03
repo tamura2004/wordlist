@@ -4,13 +4,30 @@
       span.icon-bar
       span.icon-bar
       span.icon-bar
-    a.navbar-brand href="/" ワードリスト
+    a.navbar-brand href="/"
+      i class="fa fa-book"
+      | ワードリスト
     .navbar-collapse.collapse.navbar-responsive-collapse
       ul.nav.navbar-nav
-        p.navbar-text @click="shuffle" shuffle
-        li= link_to "Link 2", "/path2"
-        li= link_to "Link 3", "/path3"
-        li: a v-if="status.login" = "ユーザー：{{user}}"
+        li :class="{active: menu.rank}"
+          a @click="setMenu('rank')"
+            i class="fa fa-line-chart"
+            | ランキング
+
+        li :class="{active: menu.word}"
+          a @click="setMenu('word')"
+            i class="fa fa-files-o"
+            | ワード一覧
+
+        li :class="{active: menu.quiz}"
+          a @click="setMenu('quiz')"
+            i class="fa fa-graduation-cap"
+            | クイズモード
+
+        li v-if="status.login"
+          a @click="logoff"
+            i class="fa fa-user"
+            = "ユーザー：{{user}}"
 
       form.navbar-form.navbar-right role="search"
 
@@ -22,7 +39,7 @@
 
         .checkbox v-if="status.login"
           label
-            input type="checkbox" 自分の投稿のみ表示
+            input type="checkbox" v-model="checkSelf" 自分の投稿のみ表示
 
         .form-group v-if="status.login"
           select.form-control v-model="sortkey"
@@ -39,11 +56,54 @@
         .form-group v-if="status.login"
           input.form-control type="text" v-model="query" placeholder="検索" style="width:100px"
 
+.container v-if="menu.rank"
+  .row
+    .col-xs-4
+      .panel.panel-default
+        .panel-heading 総合ランキング
+        table.table
+          thead
+            tr
+              th 順位
+              th 氏名
+              th 登録ワード数
+          tbody
+            tr v-for="value in totalRank | orderBy 'value' -1"
+              td v-text="$index+1"
+              td v-text="$key"
+              td v-text="value"
 
+    .col-xs-4
+      .panel.panel-default
+        .panel-heading 月間ランキング
+        table.table
+          thead
+            tr
+              th 順位
+              th 氏名
+              th 登録ワード数
+          tbody
+            tr v-for="value in monthlyRank | orderBy 'value' -1"
+              td v-text="$index+1"
+              td v-text="$key"
+              td v-text="value"
 
+    .col-xs-4
+      .panel.panel-default
+        .panel-heading 週間ランキング
+        table.table
+          thead
+            tr
+              th 順位
+              th 氏名
+              th 登録ワード数
+          tbody
+            tr v-for="value in weeklyRank | orderBy 'value' -1"
+              td v-text="$index+1"
+              td v-text="$key"
+              td v-text="value"
 
-.container
-  = bootstrap_flash
+.container v-if="menu.word || menu.quiz"
   .item#new
     textarea.item-title{
       placeholder="ワードを入力"
@@ -57,10 +117,14 @@
       v-model="desc"
     }
 
-  .item v-for="word in words | filterBy query | orderBy sortkey sortorder | limitBy 50" transition="item" track-by="id" v-show="!word.removed"
+  .item v-for="word in words | filterBy query | filterBy filterSelf | orderBy sortkey sortorder | limitBy 50" transition="item" track-by="id" v-show="!word.removed"
     i class="fa fa-2x fa-times delete-button" @click="remove(word)"
     textarea.item-title v-model="word.name"
-    textarea.card-body v-model="word.desc"
+    textarea.item-body v-show="menu.word" v-model="word.desc"
+    .item-footer
+      span v-text="word.updated_at.substr(0,10)"
+      |&nbsp;
+      span v-text="word.user"
 
   footer
     p &copy; Company 2016
