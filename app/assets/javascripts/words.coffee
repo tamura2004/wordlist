@@ -6,7 +6,7 @@ $ ->
     el: "#app"
     data:
       sortkey: "created_at"
-      sortorder: "-1"
+      sortorder: -1
       query: ""
       checkSelf: false
       status:
@@ -15,6 +15,7 @@ $ ->
         rank: false
         word: true
         quiz: false
+        upload: false
       user: ""
       username: ""
       name: ""
@@ -44,8 +45,22 @@ $ ->
       weeklyRank: -> _.countBy @words, "user"
 
     methods:
+      onChange: (e)->
+        console.log "change"
+        console.log e
+
+      onInput: (e)->
+        console.log "input"
+        console.log e
+
+      update: (word)->
+        @$http.patch("words/#{word.id}.json",word,csrfheader).then(
+          (response) -> console.log response
+          (response) -> console.log response
+        )
+
       setMenu: (name)->
-        for page in ["rank","word","quiz"]
+        for page in ["rank","word","quiz","upload"]
           @menu[page] = (name is page)
 
       filterSelf: (v)->
@@ -69,12 +84,14 @@ $ ->
         else
           alert "名前は全角で入力して下さい"
 
-      add: ->
-        @words.unshift name: "hoge", desc: "fuga"
-
       remove: (word) ->
-        @words = _.filter @words, (w) ->
-          w.id isnt word.id
+        @$http.patch("words/#{word.id}.json",{removed:true},csrfheader).then(
+          (response) -> console.log response
+          (response) -> console.log response
+        )
+        @words = _.filter @words, (w) -> w.id isnt word.id
+
+      focusNext: (e) -> e.target.nextElementSibling.focus()
 
       onEnter: (e) ->
         t = e.target
@@ -85,10 +102,6 @@ $ ->
           when "item-body"
             @insert()
             t.previousElementSibling.focus()
-
-      changeBody: (e) ->
-        console.log e.target.value
-
 
       insert: ->
         document.getElementById("new").firstElementChild.focus()

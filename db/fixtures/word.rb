@@ -21,12 +21,10 @@ EOD
 
 users = %w(新井 井上 臼井 遠藤 太田 金子 菊池)
 
-200.times do
-  words.each do |name,desc|
-    Word.seed do |s|
-      s.name = name
-      s.desc = desc
-      s.user = users.sample
-    end
+words.each do |name,desc|
+  Word.seed do |s|
+    s.name = name
+    s.desc = desc
+    s.user = users.sample
   end
 end

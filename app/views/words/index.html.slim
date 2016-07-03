@@ -24,6 +24,11 @@
             i class="fa fa-graduation-cap"
             | クイズ
 
+        li :class="{active: menu.upload}" v-show="status.login"
+          a @click="setMenu('upload')"
+            i class="fa fa-upload"
+            | 一括登録
+
         li v-if="status.login"
           a @click="logoff"
             i class="fa fa-user"
@@ -39,7 +44,7 @@
 
         .checkbox v-if="status.login"
           label
-            input type="checkbox" v-model="checkSelf" 自分の投稿のみ表示
+            input type="checkbox" v-model="checkSelf" 自分ワード
 
         .form-group v-if="status.login"
           select.form-control v-model="sortkey"
@@ -55,6 +60,12 @@
 
         .form-group v-if="status.login"
           input.form-control type="text" v-model="query" placeholder="検索" style="width:100px"
+
+.container v-if="menu.upload && status.login"
+  = form_tag upload_words_path, multipart: true do
+    = label_tag "ワードの一括登録（EXCEL）"
+    = file_field_tag :file
+    = submit_tag "登録"
 
 .container v-if="menu.rank"
   .row
@@ -117,10 +128,16 @@
       v-model="desc"
     }
 
-  .item v-for="word in words | filterBy query | filterBy filterSelf | orderBy sortkey sortorder | limitBy 50" transition="item" track-by="id" v-show="!word.removed"
-    i class="fa fa-2x fa-times delete-button" @click="remove(word)"
-    textarea.item-title v-model="word.name"
-    textarea.item-body v-show="menu.word" v-model="word.desc"
+  .item v-for="word in words | filterBy query | filterBy filterSelf | orderBy sortkey sortorder | limitBy 50" transition="item" v-show="!word.removed"
+
+    i class="fa fa-2x fa-times delete-button" @click="remove(word)" v-if="status.login && word.user == user"
+
+    textarea.item-title v-model="word.name" v-if="status.login && word.user == user" @change="update(word)" @keydown.enter.prevent="focusNext"
+    .item-title v-text="word.name" v-else=""
+
+    textarea.item-body v-show="menu.word" v-if="status.login && word.user == user" v-model="word.desc" @change="update(word)" @keydown.enter.prevent="update(word)"
+    .item-body v-show="menu.word" v-else="" v-text="word.desc"
+
     .item-footer
       span v-text="word.updated_at.substr(0,10)"
       |&nbsp;

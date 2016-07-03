@@ -1,6 +1,13 @@
 class WordsController < ApplicationController
   before_action :set_word, only: [:show, :edit, :update, :destroy]
 
+  def upload
+    user = cookies.signed[:name]
+    Word.upload(params[:file],user)
+    redirect_to words_url
+  end
+
+
   # GET /words
   # GET /words.json
   def index
@@ -69,6 +76,6 @@ class WordsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def word_params
-      params.require(:word).permit(:name, :desc, :user)
+      params.require(:word).permit(:name, :desc, :user, :removed)
     end
 end

@@ -13,6 +13,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 group :development, :test do
   gem 'byebug'
+  gem 'pry'
+  gem 'pry-nav'
+  gem 'pry-rails'
 end
 
 group :development do
@@ -31,3 +34,5 @@ gem "seed-fu"
 gem "monban"
 gem "monban-generators"
 gem "quiet_assets"
+gem "dropzonejs-rails"
+gem "roo", "~> 2.4.0"
