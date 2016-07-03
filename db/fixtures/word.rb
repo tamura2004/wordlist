@@ -19,10 +19,14 @@ words = YAML.load (<<EOD)
   - 従来パソコンのハードウェア制御を担ってきたBIOSに代わる、OSとファームウェアのインターフェース仕様。「EFI」は元々Intel社とHewlett-Packard社が提唱していたもので、2007年にUEFIフォーラム（Unified EFI Forum）が設立され、「UEFI」（Unified EFI）と改称された。
 EOD
 
-words.each do |name,desc|
-  Word.seed do |s|
-    s.name = name
-    s.desc = desc
+users = %w(新井 井上 臼井 遠藤 太田 金子 菊池)
+
+200.times do
+  words.each do |name,desc|
+    Word.seed do |s|
+      s.name = name
+      s.desc = desc
+      s.user = users.sample
+    end
   end
 end
-

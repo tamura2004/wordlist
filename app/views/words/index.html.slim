@@ -26,13 +26,18 @@
 
         .form-group v-if="status.login"
           select.form-control v-model="sortkey"
-            option value="name" 並び順：ワード名
-            option value="desc" 並び順：説明
-            option value="created_at" 並び順：登録日
-            option value="updated_at" 並び順：更新日
+            option value="name" ワード順
+            option value="desc" 説明順
+            option value="created_at" 登録日順
+            option value="updated_at" 更新日順
 
         .form-group v-if="status.login"
-          input.form-control type="text" v-model="query" placeholder="検索"
+          select.form-control v-model="sortorder"
+            option :value="1" 昇順
+            option :value="-1" 降順
+
+        .form-group v-if="status.login"
+          input.form-control type="text" v-model="query" placeholder="検索" style="width:100px"
 
 
 
@@ -52,7 +57,7 @@
       v-model="desc"
     }
 
-  .item v-for="word in words | filterBy query | orderBy sortkey" transition="item" track-by="id" v-show="!word.removed"
+  .item v-for="word in words | filterBy query | orderBy sortkey sortorder | limitBy 50" transition="item" track-by="id" v-show="!word.removed"
     i class="fa fa-2x fa-times delete-button" @click="remove(word)"
     textarea.item-title v-model="word.name"
     textarea.card-body v-model="word.desc"

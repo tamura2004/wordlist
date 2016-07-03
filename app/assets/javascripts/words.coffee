@@ -1,12 +1,11 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
-
 $ ->
+  csrftoken = document.querySelector("meta[name=csrf-token]").content
+
   new Vue
     el: "#app"
     data:
-      sortkey: "name"
+      sortkey: "created_at"
+      sortorder: "-1"
       query: ""
       status:
         login: false
@@ -16,14 +15,20 @@ $ ->
       words: []
 
     created: ->
-      @$http.get "words.json", (data,status,request) ->
-        @words.unshift word for word in data
+      @$http.get("words.json").then(
+        (response) -> @words = response.data
+        (response) -> console.log response
+      )
 
-      @$http.get "session.json", (data,status,request) ->
-        if data.name?
-          @user = data.name
-          @status.login = true
-        # document.getElementById("new").firstElementChild.focus()
+      @$http.get("session.json").then(
+        (response) ->
+          if response.data.name?
+            @user = response.data.name
+            @status.login = true
+        (response) -> console.log response
+      )
+
+      document.getElementById("new").firstElementChild.focus()
 
     methods:
       logoff: ->
@@ -34,11 +39,15 @@ $ ->
         name = e.target.value
         if @isZen(name) and name isnt ""
           user = name: name
-          console.log user
-          @$http.post "session.json", user, (data,status,request) ->
-            console.log data
-            @user = data.name
-            @status.login = true
+          opt = headers: "X-CSRF-Token": csrftoken
+
+          @$http.post("session.json", user, opt).then(
+            (response) ->
+              @user = response.data.name
+              @status.login = true
+
+            (response) -> console.log response
+          )
         else
           alert "名前は全角で入力して下さい"
 
@@ -75,8 +84,8 @@ $ ->
         @name = ""
         @desc = ""
 
-        @$http.post "words.json", word, (data,status,request) ->
-          @words.unshift data
+        @$http.post("words.json", word).then (response) ->
+          @words.unshift response.data
 
       isZen: (str) ->
         check = true

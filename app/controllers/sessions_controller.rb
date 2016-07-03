@@ -1,6 +1,9 @@
 class SessionsController < ApplicationController
   def create
     name = cookies.permanent.signed[:name] = params[:name]
+
+    logger.info "cookies.signed[:name] = #{cookies.signed[:name]}"
+
     @user = {
       name: name
     }
@@ -9,6 +12,7 @@ class SessionsController < ApplicationController
   end
 
   def show
+    session[:hoge] = "fuga"
     @user = {
       name: cookies.signed[:name]
     }
