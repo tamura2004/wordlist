@@ -10,9 +10,30 @@
         p.navbar-text @click="shuffle" shuffle
         li= link_to "Link 2", "/path2"
         li= link_to "Link 3", "/path3"
+        li: a v-if="status.login" = "ユーザー：{{user}}"
+
       form.navbar-form.navbar-right role="search"
-        .form-group
-          input.form-control type="text" placeholder="検索"
+
+        .form-group v-if="!status.login"
+          input.form-control type="text" placeholder="漢字氏名" @keydown.enter.prevent="login"
+
+        .form-group v-if="!status.login"
+          button.btn.btn-default @click="login" ログイン
+
+        .checkbox v-if="status.login"
+          label
+            input type="checkbox" 自分の投稿のみ表示
+
+        .form-group v-if="status.login"
+          select.form-control v-model="sortkey"
+            option value="name" 並び順：ワード名
+            option value="desc" 並び順：説明
+            option value="created_at" 並び順：登録日
+            option value="updated_at" 並び順：更新日
+
+        .form-group v-if="status.login"
+          input.form-control type="text" v-model="query" placeholder="検索"
+
 
 
 
@@ -31,7 +52,7 @@
       v-model="desc"
     }
 
-  .item v-for="word in words" transition="item" track-by="id" v-show="!word.removed"
+  .item v-for="word in words | filterBy query | orderBy sortkey" transition="item" track-by="id" v-show="!word.removed"
     i class="fa fa-2x fa-times delete-button" @click="remove(word)"
     textarea.item-title v-model="word.name"
     textarea.card-body v-model="word.desc"
@@ -41,7 +62,3 @@
 
 
 
-  / .card v-for="word in words" track-by="id" v-if="!word.removed" transition="card"
-  /   i class="fa fa-2x fa-times delete-button" @click="remove(word)"
-  /   textarea.card-title v-model="word.name"
-  /   textarea.card-body v-model="word.desc"

@@ -6,6 +6,11 @@ $ ->
   new Vue
     el: "#app"
     data:
+      sortkey: "name"
+      query: ""
+      status:
+        login: false
+      user: ""
       name: ""
       desc: ""
       words: []
@@ -13,9 +18,30 @@ $ ->
     created: ->
       @$http.get "words.json", (data,status,request) ->
         @words.unshift word for word in data
+
+      @$http.get "session.json", (data,status,request) ->
+        if data.name?
+          @user = data.name
+          @status.login = true
         # document.getElementById("new").firstElementChild.focus()
 
     methods:
+      logoff: ->
+        @user = ""
+        @status.login = false
+
+      login: (e) ->
+        name = e.target.value
+        if @isZen(name) and name isnt ""
+          user = name: name
+          console.log user
+          @$http.post "session.json", user, (data,status,request) ->
+            console.log data
+            @user = data.name
+            @status.login = true
+        else
+          alert "名前は全角で入力して下さい"
+
       shuffle: ->
         @words = _.shuffle @words
 
@@ -51,3 +77,11 @@ $ ->
 
         @$http.post "words.json", word, (data,status,request) ->
           @words.unshift data
+
+      isZen: (str) ->
+        check = true
+        for i in [0...str.length]
+          if escape(str.charAt(i)).length < 4
+            check = false
+
+        check
