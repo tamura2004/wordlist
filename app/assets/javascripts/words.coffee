@@ -16,6 +16,7 @@ $ ->
         word: true
         quiz: false
       user: ""
+      username: ""
       name: ""
       desc: ""
       words: []
@@ -55,10 +56,9 @@ $ ->
         @status.login = false
         @checkSelf = false
 
-      login: (e) ->
-        name = e.target.value
-        if @isZen(name) and name isnt ""
-          @$http.post("session.json", {name: name}, csrfheader).then(
+      login: ->
+        if @isZen(@username) and @username isnt ""
+          @$http.post("session.json", {name: @username}, csrfheader).then(
             (response) ->
               @user = response.data.name
               @status.login = true

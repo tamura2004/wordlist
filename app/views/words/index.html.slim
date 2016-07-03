@@ -17,25 +17,25 @@
         li :class="{active: menu.word}"
           a @click="setMenu('word')"
             i class="fa fa-files-o"
-            | ワード一覧
+            | ワード
 
         li :class="{active: menu.quiz}"
           a @click="setMenu('quiz')"
             i class="fa fa-graduation-cap"
-            | クイズモード
+            | クイズ
 
         li v-if="status.login"
           a @click="logoff"
             i class="fa fa-user"
-            = "ユーザー：{{user}}"
+            = "{{user}}"
 
       form.navbar-form.navbar-right role="search"
 
         .form-group v-if="!status.login"
-          input.form-control type="text" placeholder="漢字氏名" @keydown.enter.prevent="login"
+          input.form-control type="text" placeholder="漢字氏名" v-model="username" @keydown.enter.prevent="login"
 
         .form-group v-if="!status.login"
-          button.btn.btn-default @click="login" ログイン
+          button.btn.btn-default @click.prevent="login" ログイン
 
         .checkbox v-if="status.login"
           label
@@ -104,7 +104,7 @@
               td v-text="value"
 
 .container v-if="menu.word || menu.quiz"
-  .item#new
+  .item#new v-if="status.login"
     textarea.item-title{
       placeholder="ワードを入力"
       @keydown.enter.prevent="onEnter"
@@ -112,7 +112,7 @@
     }
 
     textarea.item-body{
-      placeholder="説明"
+      placeholder="説明を入力してエンターキーで登録"
       @keydown.enter.prevent="onEnter"
       v-model="desc"
     }
