@@ -132,8 +132,19 @@
 
     i class="fa fa-2x fa-times delete-button" @click="remove(word)" v-if="status.login && word.user == user"
 
-    textarea.item-title v-model="word.name" v-if="status.login && word.user == user" @change="update(word)" @keydown.enter.prevent="focusNext"
-    .item-title v-text="word.name" v-else=""
+    textarea.item-title {
+      v-model="word.name"
+      v-if="status.login && word.user == user"
+      v-bind:style="{fontSize: autosize(word.name)}"
+      @change="update(word)"
+      @keydown.enter.prevent="focusNext"
+    }
+
+    .item-title {
+      v-bind:style="{fontSize: autosize(word.name)}"
+      v-text="word.name"
+      v-else=""
+    }
 
     textarea.item-body v-show="menu.word" v-if="status.login && word.user == user" v-model="word.desc" @change="update(word)" @keydown.enter.prevent="update(word)"
     .item-body v-show="menu.word" v-else="" v-text="word.desc"

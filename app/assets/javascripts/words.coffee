@@ -45,6 +45,12 @@ $ ->
       weeklyRank: -> _.countBy @words, "user"
 
     methods:
+      autosize: (str)->
+        if str.length > 7
+          "#{Math.floor(200/(str.length))}px"
+        else
+          "24px"
+
       onChange: (e)->
         console.log "change"
         console.log e
