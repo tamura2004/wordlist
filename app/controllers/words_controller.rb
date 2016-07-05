@@ -3,10 +3,15 @@ class WordsController < ApplicationController
 
   def upload
     user = cookies.signed[:name]
-    Word.upload(params[:file],user)
-    redirect_to words_url
-  end
+    file = params[:file].path.to_s
+    xlsx = Roo::Excelx.new(file)
 
+    xlsx.each_row_streaming do |row|
+      name,desc = *row
+      Word.create(name:name, desc:desc, user:user, removed:false)
+    end
+    redirect_to :words
+  end
 
   # GET /words
   # GET /words.json
