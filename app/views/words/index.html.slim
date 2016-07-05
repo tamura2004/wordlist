@@ -59,7 +59,7 @@
             option :value="-1" 降順
 
         .form-group v-if="status.login"
-          input.form-control type="text" v-model="query" placeholder="検索" style="width:100px"
+          input.form-control type="text" v-model="query" placeholder="検索" style="width:100px" @keydown.enter.prevent=""
 
 .container v-if="menu.upload && status.login"
   = form_tag upload_words_path, multipart: true do
