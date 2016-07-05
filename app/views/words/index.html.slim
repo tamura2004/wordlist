@@ -128,26 +128,35 @@
       v-model="desc"
     }
 
-  .item v-for="word in words | filterBy query | filterBy filterSelf | orderBy sortkey sortorder | limitBy 50" transition="item" v-show="!word.removed"
+  .item v-for="word in words | filterBy query | filterBy filterSelf | orderBy sortkey sortorder" transition="item" v-show="!word.removed"
 
-    i class="fa fa-2x fa-times delete-button" @click="remove(word)" v-if="status.login && word.user == user"
 
-    textarea.item-title {
-      v-model="word.name"
-      v-if="status.login && word.user == user"
-      v-bind:style="{fontSize: autosize(word.name)}"
-      @change="update(word)"
-      @keydown.enter.prevent="focusNext"
-    }
+    // 編集可能カード
+    template v-if="status.login && word.user == user"
+      i.fa.fa-2x.fa-times.delete-button @click="remove(word)"
+      textarea.item-title {
+        v-model="word.name"
+        v-bind:style="{fontSize: autosize(word.name)}"
+        @change="update(word)"
+        @keydown.enter.prevent="focusNext"
+      }
+      textarea.item-body {
+        v-show="menu.word"
+        v-model="word.desc"
+        @change="update(word)"
+        @keydown.enter.prevent="update(word)"
+      }
 
-    .item-title {
-      v-bind:style="{fontSize: autosize(word.name)}"
-      v-text="word.name"
-      v-else=""
-    }
-
-    textarea.item-body v-show="menu.word" v-if="status.login && word.user == user" v-model="word.desc" @change="update(word)" @keydown.enter.prevent="update(word)"
-    .item-body v-show="menu.word" v-else="" v-text="word.desc"
+    // 表示専用カード
+    template v-else=""
+      .item-title {
+        v-bind:style="{fontSize: autosize(word.name)}"
+        v-text="word.name"
+      }
+      .item-body {
+        v-show="menu.word"
+        v-text="word.desc"
+      }
 
     .item-footer
       span v-text="word.updated_at.substr(0,10)"

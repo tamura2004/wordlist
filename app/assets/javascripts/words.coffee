@@ -51,14 +51,6 @@ $ ->
         else
           "24px"
 
-      onChange: (e)->
-        console.log "change"
-        console.log e
-
-      onInput: (e)->
-        console.log "input"
-        console.log e
-
       update: (word)->
         @$http.patch("wl/words/#{word.id}.json",word,csrfheader).then(
           (response) -> console.log response
