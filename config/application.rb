@@ -31,7 +31,5 @@ module Vuejsrails
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
-    config.web_console.whitelisted_ips = ["221.241.47.0/24","202.212.22.0/24"]
-    config.web_console.development_only = false
   end
 end

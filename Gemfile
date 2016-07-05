@@ -24,9 +24,9 @@ end
 
 group :development do
   gem 'spring'
+  gem 'web-console', '~> 2.0'
 end
 
-gem 'web-console', '~> 2.0'
 gem "slim-rails"
 gem "vuejs-rails"
 gem "less-rails"
