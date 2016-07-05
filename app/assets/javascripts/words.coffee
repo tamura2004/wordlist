@@ -8,6 +8,7 @@ $ ->
       sortkey: "created_at"
       sortorder: -1
       query: ""
+      filter: "all"
       checkSelf: false
       status:
         login: false
@@ -63,6 +64,9 @@ $ ->
 
       filterSelf: (v)->
         not @checkSelf or v.user is @user
+
+      filterCustom: (v) ->
+        @filter is "all" or (@filter is "num" and v.name.match(/^[0-9]+$/)) or (@filter is "nodesc" and v.desc is null)
 
       logoff: ->
         @user = ""

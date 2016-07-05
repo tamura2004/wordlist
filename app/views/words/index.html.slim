@@ -14,10 +14,24 @@
             i class="fa fa-line-chart"
             | ランキング
 
-        li :class="{active: menu.word}"
-          a @click="setMenu('word')"
+        li.dropdown :class="{active: menu.word}"
+          a.dropdown-toggle data-toggle="dropdown" @click="setMenu('word')"
             i class="fa fa-files-o"
             | ワード
+            span.caret
+          ul.dropdown-menu
+            .radio
+              label
+                input type="radio" name="all" id="all" value="all" v-model="filter"
+                | 全て表示
+              li.divider role="separator"
+              label
+                input type="radio" name="num" id="num" value="num" v-model="filter"
+                | ワード名が数字のみ
+              li.divider role="separator"
+              label
+                input type="radio" name="nodesc" id="nodesc" value="nodesc" v-model="filter"
+                | 説明が未入力
 
         li :class="{active: menu.quiz}"
           a @click="setMenu('quiz')"
@@ -128,7 +142,7 @@
       v-model="desc"
     }
 
-  .item v-for="word in words | filterBy query | filterBy filterSelf | orderBy sortkey sortorder" transition="item" v-show="!word.removed"
+  .item v-for="word in words | filterBy query | filterBy filterSelf | filterBy filterCustom | orderBy sortkey sortorder" transition="item" v-show="!word.removed"
 
 
     // 編集可能カード
@@ -136,7 +150,7 @@
       i.fa.fa-2x.fa-times.delete-button @click="remove(word)"
       textarea.item-title {
         v-model="word.name"
-        v-bind:style="{fontSize: autosize(word.name)}"
+        :style="{fontSize: autosize(word.name)}"
         @change="update(word)"
         @keydown.enter.prevent="focusNext"
       }
@@ -150,7 +164,7 @@
     // 表示専用カード
     template v-else=""
       .item-title {
-        v-bind:style="{fontSize: autosize(word.name)}"
+        :style="{fontSize: autosize(word.name)}"
         v-text="word.name"
       }
       .item-body {
