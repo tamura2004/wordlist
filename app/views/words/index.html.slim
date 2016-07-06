@@ -80,6 +80,8 @@
     = label_tag "ワードの一括登録（EXCEL）"
     = file_field_tag :file
     = submit_tag "登録"
+  hr
+    a.btn.btn-lg.btn-primary href="wl/words.xlsx" download Excel
 
 .container v-if="menu.rank"
   .row

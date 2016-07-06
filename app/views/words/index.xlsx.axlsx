@@ -1,0 +1,24 @@
+headers = %w(name desc id user removed created_at updated_at)
+widths = [6,100,6,6,6,6]
+set_print = {fit_to_width: 1, fit_to_height: 1, orientation: :landscape}
+sheet_name = "wordlist"
+
+workbook = xlsx_package.workbook
+
+# style
+workbook.styles.fonts.first.name = 'Meiryo'
+default = workbook.styles.add_style sz: 9, alignment: {horizontal: :left, vertical: :center}
+date = workbook.styles.add_style sz: 9, alignment: {horizontal: :left, vertical: :center}, format_code: "yyyy/mm/dd"
+header = workbook.styles.add_style  sz: 9, alignment: {horizontal: :left, vertical: :center}, bg_color: 'e6eaff', b: true
+
+# 印刷の設定
+workbook.add_worksheet(name: sheet_name, page_setup: set_print) do |sheet|
+
+  # 列幅を決める
+  sheet.column_widths *widths
+  sheet.add_row headers, style: header
+
+  Word.pluck(:name,:desc,:id,:user,:removed,:created_at,:updated_at).each do |values|
+    sheet.add_row values, style: [default, default, default, default, date, date]
+  end
+end

@@ -15,8 +15,15 @@ class WordsController < ApplicationController
 
   # GET /words
   # GET /words.json
+  # GET /words.xlsx
   def index
-    @words = Word.where(removed: false).order("created_at desc")
+    respond_to do |format|
+      format.json {@words = Word.where(removed: false).order("created_at desc") }
+      format.xlsx do
+        response.headers['Content-Disposition'] = "attachment; filename='wordlist_#{Time.zone.now.strftime("%Y%m%d%H%M%S")}.xlsx'"
+      end
+      format.html {}
+    end
   end
 
   # GET /words/1
@@ -83,4 +90,6 @@ class WordsController < ApplicationController
     def word_params
       params.require(:word).permit(:name, :desc, :user, :removed)
     end
+
+
 end
