@@ -20,7 +20,7 @@ class WordsController < ApplicationController
     respond_to do |format|
       format.json {@words = Word.where(removed: false).order("created_at desc") }
       format.xlsx do
-        response.headers['Content-Disposition'] = "attachment; filename='wordlist_#{Time.zone.now.strftime("%Y%m%d%H%M%S")}.xlsx'"
+        response.headers['Content-Disposition'] = "attachment; filename=wordlist_#{Time.zone.now.strftime("%Y%m%d%H%M%S")}.xlsx"
       end
       format.html {}
     end
