@@ -144,7 +144,7 @@
       v-model="desc"
     }
 
-  .item v-for="word in words | filterBy query | filterBy filterSelf | filterBy filterCustom | orderBy sortkey sortorder" transition="item" v-show="!word.removed"
+  .item v-for="word in words | filterBy query in 'name' 'desc' 'user' | filterBy filterSelf | filterBy filterCustom | orderBy sortkey sortorder" transition="item" v-show="!word.removed"
 
 
     // 編集可能カード

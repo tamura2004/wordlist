@@ -7,7 +7,7 @@ class WordsController < ApplicationController
     xlsx = Roo::Excelx.new(file)
 
     xlsx.each_row_streaming do |row|
-      name,desc = *row
+      name,desc = row.map(&:value)
       Word.create(name:name, desc:desc, user:user, removed:false)
     end
     redirect_to :words
@@ -18,10 +18,16 @@ class WordsController < ApplicationController
   # GET /words.xlsx
   def index
     respond_to do |format|
-      format.json {@words = Word.where(removed: false).order("created_at desc") }
-      format.xlsx do
-        response.headers['Content-Disposition'] = "attachment; filename=wordlist_#{Time.zone.now.strftime("%Y%m%d%H%M%S")}.xlsx"
+      format.json do
+        @words = Word.where(removed: false).order("created_at desc")
       end
+
+      format.xlsx do
+        timestamp = Time.zone.now.strftime("%Y%m%d%H%M%S")
+        filename = "wordlist_#{timestamp}.xlsx"
+        response.headers['Content-Disposition'] = "attachment; filename=#{filename}"
+      end
+
       format.html {}
     end
   end

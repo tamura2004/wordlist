@@ -24,12 +24,12 @@ $ ->
       words: []
 
     created: ->
-      @$http.get("wl/words.json").then(
+      @$http.get("/wl/words.json").then(
         (response) -> @words = response.data
         (response) -> console.log response
       )
 
-      @$http.get("wl/session.json").then(
+      @$http.get("/wl/session.json").then(
         (response) ->
           if response.data.name?
             @user = response.data.name
@@ -53,7 +53,7 @@ $ ->
           "24px"
 
       update: (word)->
-        @$http.patch("wl/words/#{word.id}.json",word,csrfheader).then(
+        @$http.patch("/wl/words/#{word.id}.json",word,csrfheader).then(
           (response) -> console.log response
           (response) -> console.log response
         )
@@ -75,7 +75,7 @@ $ ->
 
       login: ->
         if @isZen(@username) and @username isnt ""
-          @$http.post("wl/session.json", {name: @username}, csrfheader).then(
+          @$http.post("/wl/session.json", {name: @username}, csrfheader).then(
             (response) ->
               @user = response.data.name
               @status.login = true
@@ -87,7 +87,7 @@ $ ->
           alert "名前は全角で入力して下さい"
 
       remove: (word) ->
-        @$http.patch("wl/words/#{word.id}.json",{removed:true},csrfheader).then(
+        @$http.patch("/wl/words/#{word.id}.json",{removed:true},csrfheader).then(
           (response) -> console.log response
           (response) -> console.log response
         )
@@ -115,7 +115,7 @@ $ ->
         @name = ""
         @desc = ""
 
-        @$http.post("wl/words.json", word, csrfheader).then(
+        @$http.post("/wl/words.json", word, csrfheader).then(
           (response) -> @words.unshift response.data
           (response) -> console.log response
         )
