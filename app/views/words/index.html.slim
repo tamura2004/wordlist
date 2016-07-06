@@ -81,7 +81,7 @@
     = file_field_tag :file
     = submit_tag "登録"
   hr
-    a.btn.btn-lg.btn-primary href="wl/words.xlsx" download Excel
+    a.btn.btn-primary href="/wl/words.xlsx" ワードの一括ダウンロード（EXCEL）
 
 .container v-if="menu.rank"
   .row
@@ -175,7 +175,7 @@
       }
 
     .item-footer
-      span v-text="word.updated_at.substr(0,10)"
+      span v-text="word.updated_at.substr(0,10)+' '+word.updated_at.substr(11,5)"
       |&nbsp;
       span v-text="word.user"
 
