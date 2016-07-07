@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     resources :words do
       collection do
         post :upload
+        get :count
       end
     end
 

@@ -17,6 +17,8 @@ $ ->
         word: true
         quiz: false
         upload: false
+      page: 1
+      maxpage: 0
       user: ""
       username: ""
       name: ""
@@ -24,7 +26,7 @@ $ ->
       words: []
 
     created: ->
-      @$http.get("/wl/words.json").then(
+      @$http.get("/wl/words.json?page=#{@page}").then(
         (response) -> @words = response.data
         (response) -> console.log response
       )
@@ -38,6 +40,13 @@ $ ->
         (response) -> console.log response
       )
 
+      @$http.get("/wl/words/count.json").then(
+        (response) ->
+          @maxpage = Math.ceil(response.data.count/14)
+
+        (response) -> console.log response
+      )
+
       document.getElementById("new").firstElementChild.focus()
 
     computed:
@@ -46,6 +55,24 @@ $ ->
       weeklyRank: -> _.countBy @words, "user"
 
     methods:
+      gotopage: (p)->
+        @page = p
+        @getpage()
+
+      toppage: ->
+        @page = 1
+        @getpage()
+
+      lastpage: ->
+        @page = @maxpage
+        @getpage()
+
+      getpage: ->
+        @$http.get("/wl/words.json?page=#{@page}").then(
+          (response) -> @words = response.data
+          (response) -> console.log response
+        )
+
       autosize: (str)->
         if str.length > 7
           "#{Math.floor(200/(str.length))}px"

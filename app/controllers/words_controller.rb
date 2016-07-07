@@ -1,6 +1,10 @@
 class WordsController < ApplicationController
   before_action :set_word, only: [:show, :edit, :update, :destroy]
 
+  def count
+    @count = Word.count
+  end
+
   def upload
     user = cookies.signed[:name]
     file = params[:file].path.to_s
@@ -19,7 +23,7 @@ class WordsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        @words = Word.where(removed: false).order("created_at desc")
+        @words = Word.where(removed: false).order("created_at desc").page(params[:page])
       end
 
       format.xlsx do
@@ -28,7 +32,7 @@ class WordsController < ApplicationController
         response.headers['Content-Disposition'] = "attachment; filename=#{filename}"
       end
 
-      format.html {}
+      format.html{}
     end
   end
 
