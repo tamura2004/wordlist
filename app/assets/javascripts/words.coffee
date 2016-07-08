@@ -17,8 +17,11 @@ $ ->
         word: true
         quiz: false
         upload: false
-      page: 1
-      maxpage: 0
+      page:
+        show: 14
+        move: 10
+        current: 0
+        max: 0
       user: ""
       username: ""
       name: ""
@@ -26,7 +29,7 @@ $ ->
       words: []
 
     created: ->
-      @$http.get("/wl/words.json?page=#{@page}").then(
+      @$http.get("/wl/words.json").then(
         (response) -> @words = response.data
         (response) -> console.log response
       )
@@ -42,7 +45,7 @@ $ ->
 
       @$http.get("/wl/words/count.json").then(
         (response) ->
-          @maxpage = Math.ceil(response.data.count/14)
+          @page.max = Math.ceil(response.data.count/@page.move)
 
         (response) -> console.log response
       )
@@ -53,25 +56,23 @@ $ ->
       totalRank: -> _.countBy @words, "user"
       monthlyRank: -> _.countBy @words, "user"
       weeklyRank: -> _.countBy @words, "user"
+      pos: -> @page.current * @page.move
 
     methods:
-      gotopage: (p)->
-        @page = p
-        @getpage()
+      isEllipsis: (p) ->
+        (p is 3 and 6 <= @page.current) or (p is @page.max - 3 and @page.current <= @page.max - 6)
 
-      toppage: ->
-        @page = 1
-        @getpage()
+      inRange: (p) ->
+        p < 3 or @page.max - 3 < p or (@page.current - 3 < p and p < @page.current + 3)
 
-      lastpage: ->
-        @page = @maxpage
-        @getpage()
+      isCurrent: (p)->
+        @page.current is p
 
-      getpage: ->
-        @$http.get("/wl/words.json?page=#{@page}").then(
-          (response) -> @words = response.data
-          (response) -> console.log response
-        )
+      gotopage: (p)-> @page.current = p
+      prevpage: -> @page.current -= 1 if @page.current > 0
+      nextpage: -> @page.current += 1 if @page.current < @page.max
+      toppage: -> @page.current = 0
+      lastpage: -> @page.current = @page.max
 
       autosize: (str)->
         if str.length > 7

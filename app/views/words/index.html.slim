@@ -136,13 +136,29 @@
     ul.pagination
       li
         a area-label="Previous" @click.prevent="toppage"
-          span aria-hidden="true" &laquo;
+          span aria-hidden="true"
+            i.fa.fa-step-backward
 
-      li v-for="p in maxpage"
-        a v-text="p" @click="gotopage(p)" :class="page == p ? active : ''"
+      li
+        a area-label="Previous" @click.prevent="prevpage"
+          span aria-hidden="true"
+            i.fa.fa-backward
+
+      li v-for="p in page.max" :class="{active: isCurrent(p), disabled: isEllipsis(p)}"
+        a v-text="p" @click="gotopage(p)" v-if="inRange(p)"
+        a area-label="Ellipsis" v-if="isEllipsis(p)"
+          span area-hidden="true"
+            i.fa.fa-ellipsis-h
+
+      li
+        a area-label="Next" @click.prevent="nextpage"
+          span area-hidden="true"
+            i.fa.fa-forward
+
       li
         a area-label="Next" @click.prevent="lastpage"
-          span area-hidden="true" &raquo;
+          span area-hidden="true"
+            i.fa.fa-step-forward
   br
 
   .item#new v-if="status.login"
@@ -158,7 +174,7 @@
       v-model="desc"
     }
 
-  .item v-for="word in words | filterBy query in 'name' 'desc' 'user' | filterBy filterSelf | filterBy filterCustom | orderBy sortkey sortorder" transition="item" v-show="!word.removed"
+  .item v-for="word in words | filterBy query in 'name' 'desc' 'user' | filterBy filterSelf | filterBy filterCustom | orderBy sortkey sortorder | limitBy page.show pos" transition="item" v-show="!word.removed"
 
 
     // 編集可能カード
