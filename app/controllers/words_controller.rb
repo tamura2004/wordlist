@@ -1,6 +1,16 @@
 class WordsController < ApplicationController
   before_action :set_word, only: [:show, :edit, :update, :destroy]
 
+  def maintenance
+    Word.delete_all(removed: true)
+    Word.find_each do |word|
+      if word.name =~ /^\d+$/
+        word.delete
+      end
+    end
+    redirect_to :words
+  end
+
   def count
     @count = Word.count
   end
@@ -61,7 +71,12 @@ class WordsController < ApplicationController
         format.json { render :show, status: :created, location: @word }
       else
         format.html { render :new }
-        format.json { render json: @word.errors, status: :unprocessable_entity }
+        format.json do
+          @word.errors.full_messages do |message|
+            logger.warn message
+          end
+          render json: @word.errors.full_messages, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -75,7 +90,12 @@ class WordsController < ApplicationController
         format.json { render :show, status: :ok, location: @word }
       else
         format.html { render :edit }
-        format.json { render json: @word.errors, status: :unprocessable_entity }
+        format.json do
+          @word.errors.full_messages do |message|
+            logger.warn message
+          end
+          render json: @word.errors.full_messages, status: :unprocessable_entity
+        end
       end
     end
   end

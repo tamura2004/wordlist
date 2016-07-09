@@ -39,7 +39,6 @@ $ ->
           if response.data.name?
             @user = response.data.name
             @status.login = true
-            @checkSelf = true
         (response) -> console.log response
       )
 
