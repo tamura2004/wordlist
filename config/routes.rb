@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  scope :wl do
+  scope :wordlist do
     resources :words do
       collection do
         post :upload

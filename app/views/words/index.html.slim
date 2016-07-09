@@ -81,7 +81,8 @@
     = file_field_tag :file
     = submit_tag "登録"
   hr
-    a.btn.btn-primary href="/wl/words.xlsx" ワードの一括ダウンロード（EXCEL）
+    / a.btn.btn-primary href="/wordlist/words.xlsx" ワードの一括ダウンロード（EXCEL）
+    = link_to "ワードの一括ダウンロード（EXCEL）", words_path(format: "xlsx"), class: "btn btn-primary"
 
 .container v-if="menu.rank"
   .row
@@ -131,6 +132,11 @@
               td v-text="value"
 
 .container v-if="menu.word || menu.quiz"
+
+  .alert.alert-danger role="alert" v-if="errors.length > 0"
+    button.close type="button" area-label="Close" @click="clearErrors"
+      span &times;
+    p v-for="error in errors" v-text="error"
 
   nav
     ul.pagination

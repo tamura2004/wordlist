@@ -1,0 +1,9 @@
+ja:
+  activerecord:
+    models:
+      word: ワード
+    attributes:
+      word:
+        name: ワード名
+        desc: 説明
+        user: 登録者

@@ -27,14 +27,15 @@ $ ->
       name: ""
       desc: ""
       words: []
+      errors: []
 
     created: ->
-      @$http.get("/wl/words.json").then(
+      @$http.get("/wordlist/words.json").then(
         (response) -> @words = response.data
         (response) -> console.log response
       )
 
-      @$http.get("/wl/session.json").then(
+      @$http.get("/wordlist/session.json").then(
         (response) ->
           if response.data.name?
             @user = response.data.name
@@ -42,7 +43,7 @@ $ ->
         (response) -> console.log response
       )
 
-      @$http.get("/wl/words/count.json").then(
+      @$http.get("/wordlist/words/count.json").then(
         (response) ->
           @page.max = Math.ceil(response.data.count/@page.move)
 
@@ -58,6 +59,8 @@ $ ->
       pos: -> @page.current * @page.move
 
     methods:
+      clearErrors: -> @errors = []
+
       isEllipsis: (p) ->
         (p is 3 and 6 <= @page.current) or (p is @page.max - 3 and @page.current <= @page.max - 6)
 
@@ -75,14 +78,14 @@ $ ->
 
       autosize: (str)->
         if str.length > 7
-          "#{Math.floor(200/(str.length))}px"
+          "#{Math.floor(180/(str.length))}px"
         else
           "24px"
 
       update: (word)->
-        @$http.patch("/wl/words/#{word.id}.json",word,csrfheader).then(
+        @$http.patch("/wordlist/words/#{word.id}.json",word,csrfheader).then(
           (response) -> console.log response
-          (response) -> console.log response
+          (response) -> @errors = response.data
         )
 
       setMenu: (name)->
@@ -102,7 +105,7 @@ $ ->
 
       login: ->
         if @isZen(@username) and @username isnt ""
-          @$http.post("/wl/session.json", {name: @username}, csrfheader).then(
+          @$http.post("/wordlist/session.json", {name: @username}, csrfheader).then(
             (response) ->
               @user = response.data.name
               @status.login = true
@@ -114,9 +117,9 @@ $ ->
           alert "名前は全角で入力して下さい"
 
       remove: (word) ->
-        @$http.patch("/wl/words/#{word.id}.json",{removed:true},csrfheader).then(
+        @$http.patch("/wordlist/words/#{word.id}.json",{removed:true},csrfheader).then(
           (response) -> console.log response
-          (response) -> console.log response
+          (response) -> console.log response.data
         )
         @words = _.filter @words, (w) -> w.id isnt word.id
 
@@ -142,9 +145,9 @@ $ ->
         @name = ""
         @desc = ""
 
-        @$http.post("/wl/words.json", word, csrfheader).then(
+        @$http.post("/wordlist/words.json", word, csrfheader).then(
           (response) -> @words.unshift response.data
-          (response) -> console.log response
+          (response) -> @errors = response.data
         )
 
       isZen: (str) ->
