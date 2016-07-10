@@ -12,31 +12,17 @@
         li :class="{active: menu.chart}"
           a @click="setMenu('chart')"
             i class="fa fa-bar-chart"
-            | 登録数グラフ
+            | グラフ
 
         li :class="{active: menu.rank}"
           a @click="setMenu('rank')"
             i class="fa fa-line-chart"
-            | ランキング
+            | ランク
 
         li.dropdown :class="{active: menu.word}"
-          a.dropdown-toggle data-toggle="dropdown" @click="setMenu('word')"
+          a @click="setMenu('word')"
             i class="fa fa-files-o"
             | ワード
-            span.caret
-          ul.dropdown-menu
-            .radio
-              label
-                input type="radio" name="all" id="all" value="all" v-model="filter"
-                | 全て表示
-              li.divider role="separator"
-              label
-                input type="radio" name="num" id="num" value="num" v-model="filter"
-                | ワード名が数字のみ
-              li.divider role="separator"
-              label
-                input type="radio" name="nodesc" id="nodesc" value="nodesc" v-model="filter"
-                | 説明が未入力
 
         li :class="{active: menu.quiz}"
           a @click="setMenu('quiz')"
@@ -46,7 +32,7 @@
         li :class="{active: menu.upload}" v-show="status.login"
           a @click="setMenu('upload')"
             i class="fa fa-upload"
-            | 一括登録
+            | 一括
 
         li v-if="status.login"
           a @click="logoff"
@@ -86,7 +72,6 @@
     = file_field_tag :file
     = submit_tag "登録"
   hr
-    / a.btn.btn-primary href="/wordlist/words.xlsx" ワードの一括ダウンロード（EXCEL）
     = link_to "ワードの一括ダウンロード（EXCEL）", words_path(format: "xlsx"), class: "btn btn-primary"
 
 .container v-show="menu.chart"
@@ -184,7 +169,7 @@
       v-model="desc"
     }
 
-  .item v-for="word in words | filterBy query in 'name' 'desc' 'user' | filterBy filterSelf | filterBy filterCustom | orderBy sortkey sortorder | limitBy page.show pos" transition="item" v-show="!word.removed"
+  .item v-for="word in words | filterBy query in 'name' 'desc' 'user' | filterBy filterSelf | orderBy sortkey sortorder | limitBy page.show pos" transition="item" v-show="!word.removed"
 
 
     // 編集可能カード

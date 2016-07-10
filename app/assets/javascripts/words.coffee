@@ -8,7 +8,6 @@ $ ->
       sortkey: "created_at"
       sortorder: -1
       query: ""
-      filter: "all"
       checkSelf: false
       status:
         login: false
@@ -32,7 +31,10 @@ $ ->
 
     created: ->
       @$http.get("/wordlist/words.json").then(
-        (response) -> @words = response.data
+        (response) ->
+          @words = response.data
+          @page.max = Math.ceil(@words.length/@page.move) - 1
+          @drawChart()
         (response) -> @setErrors response.data
       )
 
@@ -44,14 +46,6 @@ $ ->
         (response) -> @setErrors response.data
       )
 
-      @$http.get("/wordlist/words/count.json").then(
-        (response) ->
-          @page.max = Math.ceil(response.data.count/@page.move) - 1
-
-        (response) -> @setErrors response.data
-      )
-
-      document.getElementById("new").firstElementChild.focus()
 
     computed:
       totalRank: -> _.countBy @words, "user"
@@ -178,9 +172,6 @@ $ ->
       filterSelf: (v)->
         not @checkSelf or v.user is @user
 
-      filterCustom: (v) ->
-        @filter is "all" or (@filter is "num" and v.name.match(/^[0-9]+$/)) or (@filter is "nodesc" and v.desc is null)
-
       logoff: ->
         @user = ""
         @status.login = false
@@ -200,9 +191,9 @@ $ ->
           alert "名前は全角で入力して下さい"
 
       remove: (word) ->
-        @$http.patch("/wordlist/words/#{word.id}.json",{removed:true},csrfheader).then(
+        @$http.delete("/wordlist/words/#{word.id}.json",null,csrfheader).then(
           (response) -> console.log response
-          (response) -> @setErrors response.data
+          (response) -> console.log response.data
         )
         @words = _.filter @words, (w) -> w.id isnt word.id
 
