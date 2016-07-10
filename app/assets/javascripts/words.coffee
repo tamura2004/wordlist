@@ -77,6 +77,52 @@ $ ->
 
       pos: -> @page.current * @page.move
 
+      dataPlot: ->
+        subTotal = @words.map (w)->
+          user: w.user
+          date: w.updated_at.substr(0,10)
+
+        users = _.uniq subTotal.map((w)->w.user)
+        dates = _.uniq(subTotal.map((w)->w.date)).sort()
+
+        # 集計用オブジェクトの初期化
+        total = {}
+        for user in users
+          total[user] = {}
+          for date in dates
+            total[user][date] = 0
+
+        userTotal = {}
+        userTotal[user] = 0 for user in users
+
+        # 集計
+        for {user,date} in subTotal
+          total[user][date] += 1
+          userTotal[user] += 1
+
+        # ユーザーを総登録数順に並べ替え
+        users = _.toPairs(userTotal).sort((a,b)->b[1]-a[1]).map((p)->p[0])
+
+        dataPlot = []
+        for user in users
+          points = []
+          dateSubTotal = 0
+          for date in dates
+            dateSubTotal += total[user][date]
+            points.push(
+              {label: date.substr(5,5), y: dateSubTotal}
+            )
+
+          dataPlot.push(
+            type: "line"
+            lineThickness: 4
+            markerSize: 12
+            legendText: user
+            showInLegend: true
+            dataPoints: points
+          )
+        dataPlot
+
     methods:
       setErrors: (errors) ->
         alert errors.join("\n")
@@ -117,32 +163,15 @@ $ ->
             @drawChart()
 
       drawChart: ->
-        dataPlot = []
-        for user, words of (_.groupBy @words, "user")
-          dataUser =
-            type: "line"
-            legendText: user
-            showInLegend: true
-            dataPoints: []
 
-          for day, count of (_.countBy (
-            _.orderBy words, "created_at"
-          ), (w)-> w.created_at.substr(0,10))
-
-            dataUser.dataPoints.push(
-              {label: day, y: count}
-            )
-
-          dataPlot.push dataUser
-
-        stage = document.getElementById('chart');
+        stage = document.getElementById('chart')
         chart = new CanvasJS.Chart stage,
           title:
-            text: "日別登録実績"  #グラフタイトル
+            text: "ワード登録数"  #グラフタイトル
           theme: "theme4"  #テーマ設定
-          width: 960
+          width: 1024
           height: 480
-          data: dataPlot
+          data: @dataPlot
 
         chart.render()
 

@@ -16,13 +16,13 @@ class WordsController < ApplicationController
   end
 
   def upload
-    user = cookies.signed[:name]
+    # user = cookies.signed[:name]
     file = params[:file].path.to_s
     xlsx = Roo::Excelx.new(file)
 
     xlsx.each_row_streaming do |row|
-      name,desc = row.map(&:value)
-      Word.create(name:name, desc:desc, user:user, removed:false)
+      name,desc,id,user,removed,created_at,updated_at = row.map(&:value)
+      Word.create(name:name, desc:desc, user:user, removed:false, created_at: created_at, updated_at: updated_at)
     end
     redirect_to :words
   end
@@ -118,7 +118,7 @@ class WordsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def word_params
-      params.require(:word).permit(:name, :desc, :user, :removed)
+      params.require(:word).permit(:name, :desc, :user, :removed, :created_at, :updated_at)
     end
 
 
