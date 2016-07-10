@@ -147,8 +147,8 @@ $ ->
             @drawChart()
 
       drawChart: ->
-        stage = document.getElementById('chart')
-        chart = new CanvasJS.Chart stage,
+        chart = new CanvasJS.Chart "chart",
+          animationEnabled: true
           title:
             text: "ワード登録数"  #グラフタイトル
           theme: "theme4"  #テーマ設定
