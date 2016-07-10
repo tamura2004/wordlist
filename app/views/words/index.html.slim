@@ -150,12 +150,6 @@
           span aria-hidden="true"
             i.fa.fa-backward
 
-      li v-for="p in page.max" :class="{active: isCurrent(p), disabled: isEllipsis(p)}"
-        a v-text="p" @click="gotopage(p)" v-if="inRange(p)"
-        a area-label="Ellipsis" v-if="isEllipsis(p)"
-          span area-hidden="true"
-            i.fa.fa-ellipsis-h
-
       li
         a area-label="Next" @click.prevent="nextpage"
           span area-hidden="true"

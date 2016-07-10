@@ -18,8 +18,8 @@ $ ->
         quiz: false
         upload: false
       page:
-        show: 14
-        move: 10
+        show: 50
+        move: 50
         current: 0
         max: 0
       user: ""
@@ -32,7 +32,7 @@ $ ->
     created: ->
       @$http.get("/wordlist/words.json").then(
         (response) -> @words = response.data
-        (response) -> console.log response
+        (response) -> @setErrors response.data
       )
 
       @$http.get("/wordlist/session.json").then(
@@ -40,25 +40,46 @@ $ ->
           if response.data.name?
             @user = response.data.name
             @status.login = true
-        (response) -> console.log response
+        (response) -> @setErrors response.data
       )
 
       @$http.get("/wordlist/words/count.json").then(
         (response) ->
-          @page.max = Math.ceil(response.data.count/@page.move)
+          @page.max = Math.ceil(response.data.count/@page.move) - 1
 
-        (response) -> console.log response
+        (response) -> @setErrors response.data
       )
 
       document.getElementById("new").firstElementChild.focus()
 
     computed:
       totalRank: -> _.countBy @words, "user"
-      monthlyRank: -> _.countBy @words, "user"
-      weeklyRank: -> _.countBy @words, "user"
+      monthlyRank: ->
+        monthBefore = (
+          new Date(new Date().getTime() - 30*24*3600*1000)
+        ).toISOString()
+
+        _.countBy (
+          _.filter @words, (w) ->
+            monthBefore < w.updated_at
+        ), "user"
+
+      weeklyRank: ->
+        weekBefore = (
+          new Date(new Date().getTime() - 7*24*3600*1000)
+        ).toISOString()
+
+        _.countBy (
+          _.filter @words, (w) ->
+            weekBefore < w.updated_at
+        ), "user"
+
       pos: -> @page.current * @page.move
 
     methods:
+      setErrors: (errors) ->
+        alert errors.join("\n")
+
       clearErrors: -> @errors = []
 
       isEllipsis: (p) ->
@@ -85,7 +106,7 @@ $ ->
       update: (word)->
         @$http.patch("/wordlist/words/#{word.id}.json",word,csrfheader).then(
           (response) -> console.log response
-          (response) -> @errors = response.data
+          (response) -> @setErrors response.data
         )
 
       setMenu: (name)->
@@ -119,7 +140,7 @@ $ ->
       remove: (word) ->
         @$http.patch("/wordlist/words/#{word.id}.json",{removed:true},csrfheader).then(
           (response) -> console.log response
-          (response) -> console.log response.data
+          (response) -> @setErrors response.data
         )
         @words = _.filter @words, (w) -> w.id isnt word.id
 
@@ -147,7 +168,7 @@ $ ->
 
         @$http.post("/wordlist/words.json", word, csrfheader).then(
           (response) -> @words.unshift response.data
-          (response) -> @errors = response.data
+          (response) -> @setErrors response.data
         )
 
       isZen: (str) ->
