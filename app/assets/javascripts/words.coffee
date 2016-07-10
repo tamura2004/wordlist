@@ -123,16 +123,6 @@ $ ->
 
       clearErrors: -> @errors = []
 
-      isEllipsis: (p) ->
-        (p is 3 and 6 <= @page.current) or (p is @page.max - 3 and @page.current <= @page.max - 6)
-
-      inRange: (p) ->
-        p < 3 or @page.max - 3 < p or (@page.current - 3 < p and p < @page.current + 3)
-
-      isCurrent: (p)->
-        @page.current is p
-
-      gotopage: (p)-> @page.current = p
       prevpage: -> @page.current -= 1 if @page.current > 0
       nextpage: -> @page.current += 1 if @page.current < @page.max
       toppage: -> @page.current = 0
@@ -157,7 +147,6 @@ $ ->
             @drawChart()
 
       drawChart: ->
-
         stage = document.getElementById('chart')
         chart = new CanvasJS.Chart stage,
           title:
