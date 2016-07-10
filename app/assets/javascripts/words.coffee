@@ -125,7 +125,9 @@ $ ->
             showInLegend: true
             dataPoints: []
 
-          for day, count of (_.countBy words, (w)-> w.created_at.substr(0,10))
+          for day, count of (_.countBy (
+            _.orderBy words, "created_at"
+          ), (w)-> w.created_at.substr(0,10))
 
             dataUser.dataPoints.push(
               {label: day, y: count}
