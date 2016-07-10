@@ -12,9 +12,9 @@ $ ->
       status:
         login: false
       menu:
-        chart: false
+        chart: true
         rank: false
-        word: true
+        word: false
         quiz: false
         upload: false
       page:
