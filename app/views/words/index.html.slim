@@ -9,6 +9,11 @@
       | ワードリスト
     .navbar-collapse.collapse.navbar-responsive-collapse
       ul.nav.navbar-nav
+        li :class="{active: menu.chart}"
+          a @click="setMenu('chart')"
+            i class="fa fa-bar-chart"
+            | グラフ
+
         li :class="{active: menu.rank}"
           a @click="setMenu('rank')"
             i class="fa fa-line-chart"
@@ -83,6 +88,11 @@
   hr
     / a.btn.btn-primary href="/wordlist/words.xlsx" ワードの一括ダウンロード（EXCEL）
     = link_to "ワードの一括ダウンロード（EXCEL）", words_path(format: "xlsx"), class: "btn btn-primary"
+
+.container v-show="menu.chart"
+  .row
+    .col-xs-12
+      #chart
 
 .container v-if="menu.rank"
   .row

@@ -4,7 +4,6 @@
   "private": true,
   "devDependencies": {
     "lodash": "^4.13.1",
-    "moji": "^0.5.1",
     "vue-animated-list": "^1.0.2"
   }
 }

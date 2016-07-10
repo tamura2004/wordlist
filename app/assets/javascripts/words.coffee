@@ -13,6 +13,7 @@ $ ->
       status:
         login: false
       menu:
+        chart: false
         rank: false
         word: true
         quiz: false
@@ -110,8 +111,38 @@ $ ->
         )
 
       setMenu: (name)->
-        for page in ["rank","word","quiz","upload"]
+        for page in ["chart","rank","word","quiz","upload"]
           @menu[page] = (name is page)
+          if name is "chart"
+            @drawChart()
+
+      drawChart: ->
+        dataPlot = []
+        for user, words of (_.groupBy @words, "user")
+          dataUser =
+            type: "line"
+            legendText: user
+            showInLegend: true
+            dataPoints: []
+
+          for day, count of (_.countBy words, (w)-> w.created_at.substr(0,10))
+
+            dataUser.dataPoints.push(
+              {label: day, y: count}
+            )
+
+          dataPlot.push dataUser
+
+        stage = document.getElementById('chart');
+        chart = new CanvasJS.Chart stage,
+          title:
+            text: "日別登録実績"  #グラフタイトル
+          theme: "theme4"  #テーマ設定
+          width: 960
+          height: 480
+          data: dataPlot
+
+        chart.render()
 
       filterSelf: (v)->
         not @checkSelf or v.user is @user
