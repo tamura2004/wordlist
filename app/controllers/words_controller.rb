@@ -42,6 +42,14 @@ class WordsController < ApplicationController
     end
   end
 
+  def plot
+    respond_to do |format|
+      format.json do
+        @plots = Word.find_by_sql('select "user",date(updated_at) as date,count(*) as count from words group by "user",date')
+      end
+    end
+  end
+
   # GET /words/1
   # GET /words/1.json
   def show

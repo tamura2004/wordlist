@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       collection do
         post :upload
         get :maintenance
+        get :plot
       end
     end
 

@@ -27,16 +27,11 @@ $ ->
       name: ""
       desc: ""
       words: []
+      plots: []
       errors: []
 
     created: ->
-      @$http.get("/wordlist/words.json").then(
-        (response) ->
-          @words = response.data
-          @page.max = Math.ceil(@words.length/@page.move) - 1
-          @drawChart()
-        (response) -> @setErrors response.data
-      )
+      @setMenu("chart")
 
       @$http.get("/wordlist/session.json").then(
         (response) ->
@@ -72,9 +67,7 @@ $ ->
       pos: -> @page.current * @page.move
 
       dataPlot: ->
-        subTotal = @words.map (w)->
-          user: w.user
-          date: w.updated_at.substr(0,10)
+        subTotal = @plots
 
         users = _.uniq subTotal.map((w)->w.user)
         dates = _.uniq(subTotal.map((w)->w.date)).sort()
@@ -90,9 +83,9 @@ $ ->
         userTotal[user] = 0 for user in users
 
         # 集計
-        for {user,date} in subTotal
-          total[user][date] += 1
-          userTotal[user] += 1
+        for {user,date,count} in subTotal
+          total[user][date] += count
+          userTotal[user] += count
 
         # ユーザーを総登録数順に並べ替え
         users = _.toPairs(userTotal).sort((a,b)->b[1]-a[1]).map((p)->p[0])
@@ -144,7 +137,12 @@ $ ->
         for page in ["chart","rank","word","quiz","upload"]
           @menu[page] = (name is page)
           if name is "chart"
-            @drawChart()
+            @$http.get("/wordlist/words/plot.json").then(
+              (response) ->
+                @plots = response.data
+                @drawChart()
+              (response) -> @setErrors response.data
+            )
 
       drawChart: ->
         chart = new CanvasJS.Chart "chart",
