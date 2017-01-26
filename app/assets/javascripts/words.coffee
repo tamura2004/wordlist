@@ -147,6 +147,7 @@ $ ->
           when "rank","word","quiz"
             @get "/wordlist/words.json", (response) =>
               @words = response.data
+              @page.max = Math.ceil(@words.length/@page.move) - 1
 
           when "chart"
             @get "/wordlist/words/plot.json", (response) =>
