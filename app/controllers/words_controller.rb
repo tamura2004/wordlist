@@ -29,7 +29,7 @@ class WordsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        @words = Word.where(removed: false).order("created_at desc")
+        @words = Word.where(removed: false).where("updated_at > ?",2.months.ago).order("created_at desc")
       end
 
       format.xlsx do

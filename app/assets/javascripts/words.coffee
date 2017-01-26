@@ -133,16 +133,25 @@ $ ->
           (response) -> @setErrors response.data
         )
 
+      get: (url,fn)->
+        @$http.get(url).then(
+          (response) -> fn(response)
+          (response) -> @setErrors response.data
+        )
+
       setMenu: (name)->
         for page in ["chart","rank","word","quiz","upload"]
           @menu[page] = (name is page)
-          if name is "chart"
-            @$http.get("/wordlist/words/plot.json").then(
-              (response) ->
-                @plots = response.data
-                @drawChart()
-              (response) -> @setErrors response.data
-            )
+
+        switch name
+          when "rank","word","quiz"
+            @get "/wordlist/words.json", (response) =>
+              @words = response.data
+
+          when "chart"
+            @get "/wordlist/words/plot.json", (response) =>
+              @plots = response.data
+              @drawChart()
 
       drawChart: ->
         chart = new CanvasJS.Chart "chart",
