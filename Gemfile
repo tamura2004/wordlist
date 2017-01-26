@@ -25,6 +25,7 @@ end
 group :development do
   gem 'spring'
   gem 'web-console', '~> 2.0'
+  gem 'rack-mini-profiler'
 end
 
 gem "slim-rails"
@@ -41,4 +42,3 @@ gem "axlsx"
 gem "zip-zip"
 gem "rubyzip", "= 1.1.0"
 gem "axlsx_rails"
-gem 'rack-mini-profiler'
