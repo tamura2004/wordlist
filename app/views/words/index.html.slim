@@ -91,10 +91,10 @@
               th 氏名
               th 登録ワード数
           tbody
-            tr v-for="value in totalRank | orderBy 'value' -1"
+            tr v-for="rank in totalRank"
               td v-text="$index+1"
-              td v-text="$key"
-              td v-text="value"
+              td v-text="rank.user"
+              td v-text="rank.number"
 
     .col-xs-4
       .panel.panel-default
@@ -106,10 +106,10 @@
               th 氏名
               th 登録ワード数
           tbody
-            tr v-for="value in monthlyRank | orderBy 'value' -1"
+            tr v-for="rank in monthlyRank"
               td v-text="$index+1"
-              td v-text="$key"
-              td v-text="value"
+              td v-text="rank.user"
+              td v-text="rank.number"
 
     .col-xs-4
       .panel.panel-default
@@ -121,10 +121,10 @@
               th 氏名
               th 登録ワード数
           tbody
-            tr v-for="value in weeklyRank | orderBy 'value' -1"
+            tr v-for="rank in weeklyRank"
               td v-text="$index+1"
-              td v-text="$key"
-              td v-text="value"
+              td v-text="rank.user"
+              td v-text="rank.number"
 
 .container v-if="menu.word || menu.quiz"
 

@@ -50,6 +50,30 @@ class WordsController < ApplicationController
     end
   end
 
+  def total_rank
+    respond_to do |format|
+      format.json do
+        @total_ranks = Word.rank
+      end
+    end
+  end
+
+  def monthly_rank
+    respond_to do |format|
+      format.json do
+        @monthly_ranks = Word.monthly_rank
+      end
+    end
+  end
+
+  def weekly_rank
+    respond_to do |format|
+      format.json do
+        @weekly_ranks = Word.weekly_rank
+      end
+    end
+  end
+
   # GET /words/1
   # GET /words/1.json
   def show

@@ -6,6 +6,9 @@ Rails.application.routes.draw do
         post :upload
         get :maintenance
         get :plot
+        get :total_rank
+        get :monthly_rank
+        get :weekly_rank
       end
     end
 

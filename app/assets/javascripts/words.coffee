@@ -29,6 +29,9 @@ $ ->
       words: []
       plots: []
       errors: []
+      totalRank: []
+      monthlyRank: []
+      weeklyRank: []
 
     created: ->
       @setMenu("chart")
@@ -43,26 +46,6 @@ $ ->
 
 
     computed:
-      totalRank: -> _.countBy @words, "user"
-      monthlyRank: ->
-        monthBefore = (
-          new Date(new Date().getTime() - 30*24*3600*1000)
-        ).toISOString()
-
-        _.countBy (
-          _.filter @words, (w) ->
-            monthBefore < w.updated_at
-        ), "user"
-
-      weeklyRank: ->
-        weekBefore = (
-          new Date(new Date().getTime() - 7*24*3600*1000)
-        ).toISOString()
-
-        _.countBy (
-          _.filter @words, (w) ->
-            weekBefore < w.updated_at
-        ), "user"
 
       pos: -> @page.current * @page.move
 
@@ -144,7 +127,17 @@ $ ->
           @menu[page] = (name is page)
 
         switch name
-          when "rank","word","quiz"
+          when "rank"
+            @get "/wordlist/words/total_rank.json", (response) =>
+              @totalRank = response.data
+
+            @get "/wordlist/words/monthly_rank.json", (response) =>
+              @monthlyRank = response.data
+
+            @get "/wordlist/words/weekly_rank.json", (response) =>
+              @weeklyRank = response.data
+
+          when "word","quiz"
             @get "/wordlist/words.json", (response) =>
               @words = response.data
               @page.max = Math.ceil(@words.length/@page.move) - 1
