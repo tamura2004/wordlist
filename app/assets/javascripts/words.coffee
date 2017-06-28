@@ -24,6 +24,8 @@ $ ->
         max: 0
       user: ""
       username: ""
+      number: ""
+      password: ""
       name: ""
       desc: ""
       words: []
@@ -168,17 +170,21 @@ $ ->
         @checkSelf = false
 
       login: ->
-        if @isZen(@username) and @username isnt ""
-          @$http.post("/wordlist/session.json", {name: @username}, csrfheader).then(
+        if @number isnt "" and @password isnt ""
+          params =
+            number: @number
+            password: @password
+
+          @$http.post("/wordlist/session.json", params, csrfheader).then(
             (response) ->
               @user = response.data.name
               @status.login = true
               @checkSelf = true
 
-            (response) -> console.log response
+            (response) -> alert response
           )
         else
-          alert "名前は全角で入力して下さい"
+          alert "社員番号とパスワードを入力してください"
 
       remove: (word) ->
         @$http.delete("/wordlist/words/#{word.id}.json",null,csrfheader).then(

@@ -13,6 +13,11 @@ Rails.application.routes.draw do
     end
 
     resource :session
+    root "sessions#new"
   end
-  root "words#index"
+  
+  # get "login" => "sessions#new", as: :login
+  # post "session" => "sessions#create", as: :session
+  # delete "session" => "sessions#destroy"
+
 end
