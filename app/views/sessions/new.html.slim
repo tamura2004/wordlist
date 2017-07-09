@@ -9,14 +9,14 @@
       | ワードリスト
 
     .navbar-collapse.collapse.navbar-responsive-collapse
-      form.navbar-form.navbar-right role="search"
+      = form_for @form, url: :session, html: { class: "navbar-form navbar-right", role: "search" } do |f|
 
         .form-group
-          input.form-control type="text" placeholder="社員番号" v-model="number" @keydown.enter.prevent="login"
+          = f.text_field :number, class: "form-control", placeholder:"社員番号"
 
         .form-group
-          input.form-control type="password" placeholder="パスワード" v-model="password" @keydown.enter.prevent="login"
+          = f.password_field :password, class: "form-control", placeholder: "パスワード"
 
         .form-group
-          button.btn.btn-default @click.prevent="login" ログイン
+          = f.submit "ログイン", class: "btn btn-default"
 

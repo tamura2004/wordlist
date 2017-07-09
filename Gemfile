@@ -25,7 +25,8 @@ end
 group :development do
   gem 'spring'
   gem 'web-console', '~> 2.0'
-  gem 'rack-mini-profiler'
+  gem "rb-readline"
+  # gem 'rack-mini-profiler'
 end
 
 gem "slim-rails"

@@ -9,8 +9,6 @@ $ ->
       sortorder: -1
       query: ""
       checkSelf: false
-      status:
-        login: false
       menu:
         chart: true
         rank: false
@@ -37,15 +35,6 @@ $ ->
 
     created: ->
       @setMenu("chart")
-
-      @$http.get("/wordlist/session.json").then(
-        (response) ->
-          if response.data.name?
-            @user = response.data.name
-            @status.login = true
-        (response) -> @setErrors response.data
-      )
-
 
     computed:
 
@@ -113,7 +102,7 @@ $ ->
           "24px"
 
       update: (word)->
-        @$http.patch("/wordlist/words/#{word.id}.json",word,csrfheader).then(
+        @$http.patch("/words/#{word.id}.json",word,csrfheader).then(
           (response) -> console.log response
           (response) -> @setErrors response.data
         )
@@ -130,22 +119,22 @@ $ ->
 
         switch name
           when "rank"
-            @get "/wordlist/words/total_rank.json", (response) =>
+            @get "/words/total_rank.json", (response) =>
               @totalRank = response.data
 
-            @get "/wordlist/words/monthly_rank.json", (response) =>
+            @get "/words/monthly_rank.json", (response) =>
               @monthlyRank = response.data
 
-            @get "/wordlist/words/weekly_rank.json", (response) =>
+            @get "/words/weekly_rank.json", (response) =>
               @weeklyRank = response.data
 
           when "word","quiz"
-            @get "/wordlist/words.json", (response) =>
+            @get "/words.json", (response) =>
               @words = response.data
               @page.max = Math.ceil(@words.length/@page.move) - 1
 
           when "chart"
-            @get "/wordlist/words/plot.json", (response) =>
+            @get "/words/plot.json", (response) =>
               @plots = response.data
               @drawChart()
 
@@ -164,30 +153,8 @@ $ ->
       filterSelf: (v)->
         not @checkSelf or v.user is @user
 
-      logoff: ->
-        @user = ""
-        @status.login = false
-        @checkSelf = false
-
-      login: ->
-        if @number isnt "" and @password isnt ""
-          params =
-            number: @number
-            password: @password
-
-          @$http.post("/wordlist/session.json", params, csrfheader).then(
-            (response) ->
-              @user = response.data.name
-              @status.login = true
-              @checkSelf = true
-
-            (response) -> alert response
-          )
-        else
-          alert "社員番号とパスワードを入力してください"
-
       remove: (word) ->
-        @$http.delete("/wordlist/words/#{word.id}.json",null,csrfheader).then(
+        @$http.delete("/words/#{word.id}.json",null,csrfheader).then(
           (response) -> console.log response
           (response) -> console.log response.data
         )
@@ -215,15 +182,8 @@ $ ->
         @name = ""
         @desc = ""
 
-        @$http.post("/wordlist/words.json", word, csrfheader).then(
+        @$http.post("/words.json", word, csrfheader).then(
           (response) -> @words.unshift response.data
           (response) -> @setErrors response.data
         )
 
-      isZen: (str) ->
-        check = true
-        for i in [0...str.length]
-          if escape(str.charAt(i)).length < 4
-            check = false
-
-        check

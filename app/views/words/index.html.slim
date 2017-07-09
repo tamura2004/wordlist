@@ -29,42 +29,39 @@
             i class="fa fa-graduation-cap"
             | クイズ
 
-        li :class="{active: menu.upload}" v-show="status.login"
+        li :class="{active: menu.upload}"
           a @click="setMenu('upload')"
             i class="fa fa-upload"
             | 一括
 
-        li v-if="status.login"
-          a @click="logoff"
+        li
+          a
             i class="fa fa-user"
-            = "{{user}}"
+            = current_user.name
 
       form.navbar-form.navbar-right role="search"
 
-        .form-group v-if="!status.login"
-          input.form-control type="text" placeholder="漢字氏名" v-model="username" @keydown.enter.prevent="login"
-
-        .form-group v-if="!status.login"
-          button.btn.btn-default @click.prevent="login" ログイン
-
-        .checkbox v-if="status.login"
+        .checkbox
           label
             input type="checkbox" v-model="checkSelf" 自分ワード
 
-        .form-group v-if="status.login"
+        .form-group
           select.form-control v-model="sortkey"
             option value="name" ワード順
             option value="desc" 説明順
             option value="created_at" 登録日順
             option value="updated_at" 更新日順
 
-        .form-group v-if="status.login"
+        .form-group
           select.form-control v-model="sortorder"
             option :value="1" 昇順
             option :value="-1" 降順
 
-        .form-group v-if="status.login"
+        .form-group
           input.form-control type="text" v-model="query" placeholder="検索" style="width:100px" @keydown.enter.prevent=""
+
+        .form-group
+          = link_to 'ログアウト', :session, method: :delete, class: "btn btn-small form-control"
 
 .container v-if="menu.upload && status.login"
   = form_tag upload_words_path, multipart: true do
@@ -156,7 +153,7 @@
             i.fa.fa-step-forward
   br
 
-  .item#new v-if="status.login"
+  .item#new
     textarea.item-title{
       placeholder="ワードを入力"
       @keydown.enter.prevent="onEnter"
@@ -173,7 +170,7 @@
 
 
     // 編集可能カード
-    template v-if="status.login && word.user == user"
+    template v-if="word.user == user"
       i.fa.fa-2x.fa-times.delete-button @click="remove(word)"
       textarea.item-title {
         v-model="word.name"
