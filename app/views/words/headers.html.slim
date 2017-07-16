@@ -1,5 +1,7 @@
 .container
-  h1 ヘッダ一覧
+  h1 接続元IPアドレス: #{@ip}
+  hr
+  h3 ヘッダ一覧
   table.table
     - @headers.each do |key, value|
       tr

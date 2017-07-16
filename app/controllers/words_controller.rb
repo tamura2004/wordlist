@@ -3,6 +3,7 @@ class WordsController < ApplicationController
 
   def headers
     @headers = request.headers.sort
+    @ip = request.remote_ip
   end
 
   def maintenance
