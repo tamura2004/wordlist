@@ -1,6 +1,10 @@
 class WordsController < ApplicationController
   before_action :set_word, only: [:show, :edit, :update, :destroy]
 
+  def headers
+    @headers = request.headers.sort
+  end
+
   def maintenance
     Word.delete_all(removed: true)
     Word.find_each do |word|

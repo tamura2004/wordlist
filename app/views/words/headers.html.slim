@@ -1,0 +1,9 @@
+.container
+  h1 ヘッダ一覧
+  table.table
+    - @headers.each do |key, value|
+      tr
+        td
+          strong = key
+        td = value
+

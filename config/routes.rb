@@ -15,4 +15,5 @@ Rails.application.routes.draw do
     resource :session
   end
   root "words#index"
+  get "headers" => "words#headers"
 end
