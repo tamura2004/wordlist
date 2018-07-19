@@ -1,0 +1,15 @@
+[Unit]
+Description=Puma Application Server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/workplan
+Environment="RAILS_ENV=production"
+ExecStart=/usr/local/bin/bundle exec puma -C /home/ubuntu/workplan/config/puma.rb
+TimeoutSec=300
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
