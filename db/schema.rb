@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,20 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126121457) do
+ActiveRecord::Schema.define(version: 2017_01_26_121457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "words", force: :cascade do |t|
-    t.string   "name"
-    t.string   "desc"
-    t.string   "user"
-    t.boolean  "removed",    default: false, null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+  create_table "words", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "desc"
+    t.string "user"
+    t.boolean "removed", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user"], name: "index_words_on_user"
   end
-
-  add_index "words", ["user"], name: "index_words_on_user", using: :btree
 
 end
