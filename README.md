@@ -2,13 +2,15 @@
 
 ## Requirements:
 
-- ruby 2.3+
-- yarn
+- Ubuntu 18.04 LTS 
+- ruby 2.5+
 - postgresql
+- nginx
+- puma
+- vuejs
+- slim
 
 ## Getting Started:
-
-- Ubuntu 18.04 LTS 
 
 ```
 $ cd
@@ -20,8 +22,8 @@ $ mkdir run
 $ cat /etc/issue
 Ubuntu 18.04 LTS
 
-$ git clone https://github.com/tamura2004/vue_handsontable.git workplan
-$ cd workplan
+$ git clone https://github.com/tamura2004/wordlist.git
+$ cd wordlist
 $ sudo apt-get update
 $ sudo apt-get install -y --no-install-recommends ruby ruby-dev
 $ ruby -v
@@ -76,7 +78,7 @@ $ RAILS_ENV=production bundle exec rails db:create
 $ RAILS_ENV=production bundle exec rails db:migrate
 $ DISABLE_DATABASE_ENVIRONMENT_CHECK=1 RAILS_ENV=production bundle exec rails db:reset
 
-$ scp -i key seeds.sql ubuntu@workplan.sofia3dd.net:~/workplan/tmp/seeds.sql
+$ scp -i key seeds.sql ubuntu@wordlist.sofia3dd.net:~/wordlist/tmp/seeds.sql
 
 $ RAILS_ENV=production bundle exec rails db:seed
 
@@ -98,10 +100,10 @@ $ nginx -v
 nginx version: nginx/1.14.0 (Ubuntu)
 
 $ sudo rm /etc/nginx/sites-enabled/default
-$ sudo ln -sf  /home/ubuntu/workplan/nginx.conf /etc/nginx/conf.d/nginx.conf
+$ sudo ln -sf  /home/ubuntu/wordlist/nginx.conf /etc/nginx/conf.d/nginx.conf
 $ sudo nginx -s reload
 
-$ sudo cp /home/ubuntu/workplan/puma.service /etc/systemd/system/puma.service
+$ sudo cp /home/ubuntu/wordlist/puma.service /etc/systemd/system/puma.service
 $ sudo systemctl daemon-reload
 $ sudo systemctl enable puma.service
 $ sudo systemctl start puma.service

@@ -5,9 +5,9 @@ After=network.target
 [Service]
 Type=simple
 User=ubuntu
-WorkingDirectory=/home/ubuntu/workplan
+WorkingDirectory=/home/ubuntu/wordlist
 Environment="RAILS_ENV=production"
-ExecStart=/usr/local/bin/bundle exec puma -C /home/ubuntu/workplan/config/puma.rb
+ExecStart=/usr/local/bin/bundle exec puma -C /home/ubuntu/wordlist/config/puma.rb
 TimeoutSec=300
 Restart=always
 
