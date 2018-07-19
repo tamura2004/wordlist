@@ -8,17 +8,11 @@ gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder'
-
-group :production do
-  gem "pg"
-end
+gem "puma"
+gem "pg"
 
 group :development, :test do
-  gem 'sqlite3'
   gem 'byebug'
-  # gem 'pry'
-  # gem 'pry-nav'
-  # gem 'pry-rails'
 end
 
 group :development do
@@ -29,13 +23,11 @@ end
 
 gem "slim-rails"
 gem "vuejs-rails", "= 1.0.24"
-# gem "less-rails"
 gem "therubyracer"
 gem "execjs"
 gem "twitter-bootstrap-rails", "= 3.2.2"
 gem "simple_form"
 gem "seed-fu"
-# gem "quiet_assets"
 gem "roo"
 gem "axlsx"
 gem "zip-zip"
