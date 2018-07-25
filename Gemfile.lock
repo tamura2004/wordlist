@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/randym/axlsx.git
+  revision: c593a08b2a929dac7aa8dc418b55e26b4c49dc34
+  specs:
+    axlsx (3.0.0.pre)
+      htmlentities (~> 4.3, >= 4.3.4)
+      mimemagic (~> 0.3)
+      nokogiri (~> 1.8, >= 1.8.2)
+      rubyzip (~> 1.2, >= 1.2.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -43,10 +53,6 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (9.0.0)
-    axlsx (2.0.1)
-      htmlentities (~> 4.3.1)
-      nokogiri (>= 1.4.1)
-      rubyzip (~> 1.0.0)
     axlsx_rails (0.5.2)
       actionpack (>= 3.1)
       axlsx (>= 2.0.1)
@@ -140,12 +146,10 @@ GEM
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
     ref (2.0.0)
-    roo (1.13.2)
-      nokogiri
-      rubyzip
-      spreadsheet (> 0.6.4)
-    ruby-ole (1.2.12.1)
-    rubyzip (1.0.0)
+    roo (2.7.1)
+      nokogiri (~> 1)
+      rubyzip (~> 1.1, < 2.0.0)
+    rubyzip (1.2.1)
     sass (3.5.7)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -170,8 +174,6 @@ GEM
       actionpack (>= 3.1)
       railties (>= 3.1)
       slim (~> 3.0)
-    spreadsheet (1.1.7)
-      ruby-ole (>= 1.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     sprockets (3.7.2)
@@ -216,7 +218,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  axlsx
+  axlsx!
   axlsx_rails
   byebug
   coffee-rails
@@ -227,8 +229,8 @@ DEPENDENCIES
   puma
   rack-mini-profiler
   rails (~> 5.2)
-  roo
-  rubyzip
+  roo (~> 2.7.1)
+  rubyzip (~> 1.1)
   sass-rails
   seed-fu
   simple_form
