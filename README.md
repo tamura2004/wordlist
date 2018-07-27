@@ -105,9 +105,9 @@ $ sudo nginx -s reload
 
 $ sudo cp /home/ubuntu/wordlist/puma.service /etc/systemd/system/puma.service
 $ sudo systemctl daemon-reload
-$ sudo systemctl enable puma.service
-$ sudo systemctl start puma.service
-$ sudo systemctl status puma.service
+$ sudo systemctl enable puma
+$ sudo systemctl start puma
+$ sudo systemctl status puma
 
 ```
 

@@ -32,6 +32,7 @@ $ ->
       totalRank: []
       monthlyRank: []
       weeklyRank: []
+      ctx: null
 
     created: ->
       @setMenu("chart")
@@ -44,6 +45,9 @@ $ ->
         (response) -> @setErrors response.data
       )
 
+      canvas = document.getElementById('canvas')
+      @ctx = canvas.getContext('2d')
+      @ctx.font = "24px bold"
 
     computed:
 
@@ -104,9 +108,13 @@ $ ->
       toppage: -> @page.current = 0
       lastpage: -> @page.current = @page.max
 
+      textsize: (txt)->
+        @ctx.measureText(txt).width
+
       autosize: (str)->
-        if str.length > 7
-          "#{Math.floor(180/(str.length))}px"
+        width = @textsize(str)
+        if  width > 180
+          "#{Math.floor(24*180/width)}px"
         else
           "24px"
 
